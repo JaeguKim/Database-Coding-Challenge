@@ -1,6 +1,6 @@
 # LIMIT : 추출할갯수
-# OFFSEt : SKIP 할갯수
-# ex. LIMIT 2 OFFSET 0 : 처음수를 포함해서 2개 추출
+# OFFSET : SKIP 할갯수
+# ex. LIMIT 2 OFFSET 0 : 처음수를 포함해서 2개 추출(OFFSET 이 0이면 생략가능)
 SELECT tempTable.ANIMAL_ID, tempTable.NAME
 FROM (SELECT a.ANIMAL_ID, a.NAME, DATEDIFF(b.DATETIME,a.DATETIME) AS DATEDIFF
 FROM ANIMAL_INS a INNER JOIN ANIMAL_OUTS b ON a.ANIMAL_ID = b.ANIMAL_ID) AS tempTable
