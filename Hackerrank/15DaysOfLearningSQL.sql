@@ -1,20 +1,17 @@
-#date, count, hacker_id, name who made maximum number of submissions each DAY
-#if more than one such hacker has a maximum number of submissions, print lowest hacker_id
-#sort by the date
-# 일단 매일 제출한 해커를 저장하고
-# 그 다음 그 해커들에 대해서만 연산을 진행한다.
-
-SELECT T1.SUBMISSION_DATE, T1.UNIQUE_CNT, H.HACKER_ID, H.NAME
-FROM 
-    (SELECT CNT_TABLE.SUBMISSION_DATE, COUNT(*) AS UNIQUE_CNT, MIN(CNT_TABLE.HACKER_ID) AS HACKER_ID
-    FROM
-        (SELECT SUBMISSION_DATE,MAX(CNT) AS CNT
-        FROM 
-        (SELECT SUBMISSION_DATE,HACKER_ID,COUNT(SUBMISSION_ID) AS CNT FROM SUBMISSIONS GROUP BY SUBMISSION_DATE,HACKER_ID) AS CNT_TABLE
-        GROUP BY SUBMISSION_DATE) AS MAX_TABLE,
-        (SELECT SUBMISSION_DATE,HACKER_ID,COUNT(SUBMISSION_ID) AS CNT FROM SUBMISSIONS GROUP BY SUBMISSION_DATE,HACKER_ID) AS CNT_TABLE
-    WHERE MAX_TABLE.SUBMISSION_DATE = CNT_TABLE.SUBMISSION_DATE AND MAX_TABLE.CNT = CNT_TABLE.CNT
-    GROUP BY CNT_TABLE.SUBMISSION_DATE) AS T1
-    JOIN HACKERS H ON T1.HACKER_ID = H.HACKER_ID
-ORDER BY T1.SUBMISSION_DATE
-
+select
+    submission_date,
+    (select count(distinct hacker_id)
+     from submissions as s2
+     where s2.submission_date = s1.submission_date and
+     (select count(distinct s3.submission_date)
+      from submissions as s3
+      where s3.hacker_id = s2.hacker_id and s3.submission_date < s1.submission_date) = datediff(s1.submission_date, '2016-03-01')),
+    (select hacker_id
+     from submissions as s2
+     where s2.submission_date = s1.submission_date
+     group by hacker_id
+     order by count(submission_id) desc, hacker_id limit 1) as id,
+    (select name from hackers where hacker_id = id)
+from
+    (select distinct submission_date from submissions) as s1
+group by submission_date;
