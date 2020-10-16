@@ -1,3 +1,5 @@
+-- information_chema.tables 두개를 JOIN 함으로서 충분한 row number를 구할수 있다.
+
 SET @potential_prime = 1;
 SET @divisor = 1;
 
