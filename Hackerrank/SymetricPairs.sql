@@ -8,9 +8,9 @@ FROM (SELECT @ROWINDEX1:=@ROWINDEX1 + 1 AS ROWINDEX,X,Y
 WHERE T1.X <= T1.Y AND T1.ROWINDEX != T2.ROWINDEX AND T1.X = T2.Y AND T2.X = T1.Y
 ORDER BY T1.X
 
-#Solution 2
-# EXSITS : The EXISTS operator is used to test for the existence of any record in a subquery.
-# f1.X = f1.Y 인 경우
+-- Solution 2
+-- EXSITS : The EXISTS operator is used to test for the existence of any record in a subquery.
+-- f1.X = f1.Y 인 경우
 (SELECT f1.X, f1.Y FROM Functions AS f1 
 WHERE f1.X = f1.Y GROUP BY f1.X, f1.Y HAVING COUNT(*) > 1)
 UNION
